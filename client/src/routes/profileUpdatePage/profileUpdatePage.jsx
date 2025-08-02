@@ -1,39 +1,37 @@
 import { useContext, useState } from "react";
 import "./profileUpdatePage.scss";
-import { AuthContext } from "../../context/AuthContext"
+import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 import { useNavigate } from "react-router-dom";
 import UploadWidget from "../../components/UploadWidget/UploadWidget";
 
 function ProfileUpdatePage() {
   const { currentUser, updateUser } = useContext(AuthContext);
-  const [error, setError] = useState("")
-  const [avatar, setAvatar] = useState(currentUser.avatar)
+  const [error, setError] = useState("");
+  const [avatar, setAvatar] = useState([]);
 
-  
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
 
-  const handleSubmit = async (e)=>{
-    e.preventDefault()
-    const formData = new FormData(e.target)
+    const { username, email, password } = Object.fromEntries(formData);
 
-    const {username, email, password} = Object.fromEntries(formData);
-
-    try{
+    try {
       const res = await apiRequest.put(`/users/${currentUser.id}`, {
         username,
         email,
         password,
-        avatar
+        avatar:avatar[0]
       });
-      updateUser(res.data)
-      navigate("/profilePage")
-    }catch(err){
-      console.log(err)
-      setError(err.response.message)
+      updateUser(res.data);
+      navigate("/profile");
+    } catch (err) {
+      console.log(err);
+      setError(err.response.data.message);
     }
-  }
+  };
 
   return (
     <div className="profileUpdatePage">
@@ -45,7 +43,8 @@ function ProfileUpdatePage() {
             <input
               id="username"
               name="username"
-              type="text" defaultValue={currentUser.username}
+              type="text"
+              defaultValue={currentUser.username}
             />
           </div>
           <div className="item">
@@ -53,7 +52,8 @@ function ProfileUpdatePage() {
             <input
               id="email"
               name="email"
-              type="email" defaultValue={currentUser.email}
+              type="email"
+              defaultValue={currentUser.email}
             />
           </div>
           <div className="item">
@@ -65,15 +65,16 @@ function ProfileUpdatePage() {
         </form>
       </div>
       <div className="sideContainer">
-        <img src= {avatar || "/noavatar.jpg"} alt="" className="avatar" />
-        <UploadWidget uwConfig={{
-          cloudName:"dg3fsitd8",
-          uploadPreset:"estate",
-          multiple: false,
-          maxImageSize: 200000000,
-          folder: "avatars",
-        }}
-        setAvatar={setAvatar}
+        <img src={avatar[0] || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" />
+        <UploadWidget
+          uwConfig={{
+            cloudName: "lamadev",
+            uploadPreset: "estate",
+            multiple: false,
+            maxImageFileSize: 2000000,
+            folder: "avatars",
+          }}
+          setState={setAvatar}
         />
       </div>
     </div>
