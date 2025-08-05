@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
 import bcrypt from "bcrypt";
+import { sendSavedPostNotification } from "../app.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -85,9 +86,17 @@ export const savePost = async (req, res) => {
   }
 
   try {
-    // Check if the post exists
+    // Check if the post exists and get post details
     const post = await prisma.post.findUnique({
       where: { id: postId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
     });
 
     if (!post) {
@@ -116,6 +125,29 @@ export const savePost = async (req, res) => {
           postId: postId,
         },
       });
+
+      // Get the user who saved the post
+      const savingUser = await prisma.user.findUnique({
+        where: { id: tokenUserId },
+        select: {
+          id: true,
+          username: true,
+        },
+      });
+
+      // Send notification to post owner (if it's not their own post)
+      if (post.user.id !== tokenUserId) {
+        sendSavedPostNotification(
+          post.user.id,
+          {
+            id: savingUser.id,
+            username: savingUser.username,
+            postId: postId,
+          },
+          post.title
+        );
+      }
+
       res.status(200).json({ message: "Post saved successfully", saved: true });
     }
   } catch (err) {

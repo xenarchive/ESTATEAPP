@@ -63,46 +63,51 @@ nav {
       margin: 20px;
     }
 
-    .user{
+    .user {
       display: flex;
       align-items: center;
-      font-weight: bold;
+      gap: 15px;
+      position: relative;
 
-      img{
-        width: 40px;
-        height: 40px;
+      img {
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         object-fit: cover;
-        margin-right: 20px;
       }
 
-      span{
-        @include sm{
-          display: none;
-        }
+      span {
+        font-size: 14px;
+        font-weight: 500;
       }
 
-      .profile{
-        padding: 12px 24px;
-        background-color: #fece51;
-        cursor: pointer;
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background-color: #eab42d;
+        color: rgb(0, 0, 0);
+        border-radius: 25px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
         border: none;
+        cursor: pointer;
         position: relative;
-        
-        .notification{
-          position: absolute;
-          top: -8px;
-          right: -8px;
-          background-color: red;
+        z-index: 10;
+
+        &:hover {
+          transform: translateY(-2px);
+          text-decoration: none;
           color: white;
-          border-radius: 50%;
-          width: 26px;
-          height: 26px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
         }
 
+        span {
+          color: white;
+          font-weight: 500;
+        }
       }
     }
 

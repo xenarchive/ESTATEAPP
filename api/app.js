@@ -37,7 +37,7 @@ io.use((socket, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.userId = decoded.id;
     next();
   } catch (err) {
@@ -68,6 +68,14 @@ io.on('connection', (socket) => {
       ...data,
       timestamp: new Date(),
     });
+    
+    // Send notification to receiver
+    socket.to(data.receiverId).emit('new-message-notification', {
+      senderId: socket.userId,
+      senderName: data.senderName,
+      chatId: data.chatId,
+    });
+    
     console.log(`Message sent in chat ${data.chatId} by user ${socket.userId}`);
   });
 
@@ -88,6 +96,16 @@ io.on('connection', (socket) => {
     console.log('User disconnected:', socket.userId);
   });
 });
+
+// Function to send saved post notification
+export const sendSavedPostNotification = (postOwnerId, savedByUser, postTitle) => {
+  io.to(postOwnerId).emit('post-saved-notification', {
+    userId: savedByUser.id,
+    userName: savedByUser.username,
+    postId: savedByUser.postId,
+    postTitle: postTitle,
+  });
+};
 
 server.listen(8800, () => {
   console.log("Server is running!");

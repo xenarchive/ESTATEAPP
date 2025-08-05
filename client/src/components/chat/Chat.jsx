@@ -114,12 +114,13 @@ const Chat = () => {
       setNewMessage('');
       scrollToBottom();
 
-      // Emit socket event
+      // Emit socket event with sender name
       if (socket) {
         socket.emit('send-message', {
           chatId: selectedChat.id,
           content: newMessage,
           senderId: currentUser.id,
+          senderName: currentUser.username,
           receiverId: selectedChat.otherUser.id,
         });
       }
