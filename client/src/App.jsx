@@ -9,7 +9,7 @@ import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
 import { listPageLoader, singlePageLoader, profilePageLoader } from "./lib/loaders";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthContextProvider } from "./context/AuthContext";
 import { SocketProvider } from "./context/SocketContext";
 
 function App() {
@@ -65,11 +65,11 @@ function App() {
   ]);
 
   return (
-    <AuthProvider>
+    <AuthContextProvider>
       <SocketProvider>
         <RouterProvider router={router} />
       </SocketProvider>
-    </AuthProvider>
+    </AuthContextProvider>
   );
 }
 

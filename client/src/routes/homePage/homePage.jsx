@@ -14,10 +14,9 @@ function HomePage() {
         <div className="wrapper">
           <h1 className="title">Find Real Estate & Get Your Dream Place</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
-            explicabo suscipit cum eius, iure est nulla animi consequatur
-            facilis id pariatur fugit quos laudantium temporibus dolor ea
-            repellat provident impedit!
+          Find your perfect property with ease. Our estate platform connects buyers,
+          sellers, and agents in real-time—offering verified listings, smart filters, and secure chat. 
+          Whether you're looking to buy, sell, or invest, we make real estate simple, fast, and reliable.
           </p>
           <SearchBar />
           <div className="boxes">
