@@ -2,10 +2,13 @@ import { Link } from "react-router-dom";
 import "./card.scss";
 
 function Card({ item }) {
+  // Handle case where images might be undefined or empty
+  const imageUrl = item.images && item.images.length > 0 ? item.images[0] : "/noavatar.jpg";
+
   return (
     <div className="card">
       <Link to={`/${item.id}`} className="imageContainer">
-        <img src={item.img} alt="" />
+        <img src={imageUrl} alt="" />
       </Link>
       <div className="textContainer">
         <h2 className="title">

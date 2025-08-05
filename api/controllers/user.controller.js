@@ -75,3 +75,134 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Failed to delete users!" });
   }
 };
+
+export const savePost = async (req, res) => {
+  const tokenUserId = req.userId;
+  const { postId } = req.body;
+
+  if (!postId) {
+    return res.status(400).json({ message: "Post ID is required!" });
+  }
+
+  try {
+    // Check if the post exists
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found!" });
+    }
+
+    // Check if the user has already saved this post
+    const existingSave = await prisma.savedPost.findFirst({
+      where: {
+        userId: tokenUserId,
+        postId: postId,
+      },
+    });
+
+    if (existingSave) {
+      // If already saved, remove the save (toggle functionality)
+      await prisma.savedPost.delete({
+        where: { id: existingSave.id },
+      });
+      res.status(200).json({ message: "Post unsaved successfully", saved: false });
+    } else {
+      // If not saved, add the save
+      await prisma.savedPost.create({
+        data: {
+          userId: tokenUserId,
+          postId: postId,
+        },
+      });
+      res.status(200).json({ message: "Post saved successfully", saved: true });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to save post!" });
+  }
+};
+
+export const profilePosts = async (req, res) => {
+  const tokenUserId = req.userId;
+
+  try {
+    // Get posts created by the user
+    const userPosts = await prisma.post.findMany({
+      where: { userId: tokenUserId },
+      include: {
+        postDetail: true,
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+
+    console.log("User posts count:", userPosts.length);
+
+    // Get saved posts by the user
+    const savedPosts = await prisma.savedPost.findMany({
+      where: { userId: tokenUserId },
+      include: {
+        post: {
+          include: {
+            postDetail: true,
+            user: {
+              select: {
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    console.log("Saved posts count:", savedPosts.length);
+    console.log("Saved posts data:", savedPosts);
+
+    // Extract the actual posts from saved posts
+    const savedPostData = savedPosts.map(savedPost => savedPost.post);
+
+    console.log("Extracted saved posts count:", savedPostData.length);
+
+    res.status(200).json({
+      userPosts,
+      savedPosts: savedPostData,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to get profile posts!" });
+  }
+};
+
+export const testSavedPosts = async (req, res) => {
+  try {
+    // Get all saved posts to see if any exist
+    const allSavedPosts = await prisma.savedPost.findMany({
+      include: {
+        post: true,
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
+    });
+
+    console.log("All saved posts:", allSavedPosts);
+
+    res.status(200).json({
+      message: "Test completed",
+      totalSavedPosts: allSavedPosts.length,
+      savedPosts: allSavedPosts,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to test saved posts!" });
+  }
+};

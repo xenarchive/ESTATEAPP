@@ -71,13 +71,23 @@
         border: 1px solid #999;
       }
     }
+   
 
+    a{
+    flex: 1;
+    background-color: #fece51;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    
     button {
       border: none;
       cursor: pointer;
-      background-color: #fece51;
-      flex: 1;
-
+      background-color: transparent;
+      
+      
       @include sm{
         padding: 10px;
       }
@@ -86,6 +96,7 @@
         width: 24px;
         height: 24px;
       }
+    }
     }
   }
 }
