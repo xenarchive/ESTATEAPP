@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 # 🏠 Estate Application - Full Stack Real Estate Platform
 
 A modern, full-stack real estate application built with React, Node.js, and MongoDB. Features real-time chat, dynamic notifications, and a comprehensive property management system.
