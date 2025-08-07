@@ -107,6 +107,7 @@ export const sendSavedPostNotification = (postOwnerId, savedByUser, postTitle) =
   });
 };
 
-server.listen(8800, () => {
-  console.log("Server is running!");
+const PORT = process.env.PORT || 8800;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}!`);
 });
