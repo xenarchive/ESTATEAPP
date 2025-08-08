@@ -23,6 +23,7 @@ function Login() {
       username, password
     })
     updateUser(res.data)
+    localStorage.setItem("token", res.data.token);
     navigate("/")
   }catch(err){
     setError(err.response.data.message)

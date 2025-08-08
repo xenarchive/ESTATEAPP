@@ -65,7 +65,10 @@ export const login = async (req, res)=>{
             maxAge: age,
         })
         .status(200)
-        .json(userInfo)
+        .json(
+            {...userInfo},
+            token
+        )
 
     }catch(err){
         console.log(err)
