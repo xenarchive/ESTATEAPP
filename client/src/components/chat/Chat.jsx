@@ -20,7 +20,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const res = await apiRequest.get('/chats');
+        const res = await equest.get('/chats');
         setChats(res.data);
       } catch (err) {
         console.log(err);
@@ -39,7 +39,14 @@ const Chat = () => {
       
       setLoading(true);
       try {
-        const res = await apiRequest.get(`/chats/${selectedChat.id}/messages`);
+         const token = localStorage.getItem("token");
+        const res = await apiRequest.get(`/chats/${selectedChat.id}/messages`,
+       {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
+    }
+        );
         setMessages(res.data);
         scrollToBottom();
       } catch (err) {
@@ -103,11 +110,16 @@ const Chat = () => {
     if (!newMessage.trim() || !selectedChat) return;
 
     try {
+      const token = localStorage.getItem("token");
       const res = await apiRequest.post('/chats/send', {
         chatId: selectedChat.id,
         content: newMessage,
         receiverId: selectedChat.otherUser.id,
-      });
+      },{
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
+    });
 
       // Add message to local state
       setMessages(prev => [...prev, res.data]);

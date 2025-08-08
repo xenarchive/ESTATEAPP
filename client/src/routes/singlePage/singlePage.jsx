@@ -29,7 +29,12 @@ function SinglePage() {
     // AFTER REACT 19 UPDATE TO USEOPTIMISTIK HOOK
     setSaved((prev) => !prev);
     try {
-      await apiRequest.post("/users/savePost", { postId: post.id });
+      const token = localStorage.getItem("token");
+      await apiRequest.post("/users/savePost", { postId: post.id }, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
+    });
       alert("Post saved successfully!");
     } catch (err) {
       console.log(err);
@@ -50,9 +55,14 @@ function SinglePage() {
 
     setChatLoading(true);
     try {
+      const token = localStorage.getItem("token");
       const res = await apiRequest.post("/chats/create", {
         receiverId: post.userId,
-      });
+      },{
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
+    });
       
       // Navigate to profile page with chat open
       navigate("/profile");

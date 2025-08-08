@@ -13,7 +13,12 @@ function ProfilePage() {
 
   const handleLogout = async ()=>{
     try{
-      await apiRequest.post("/auth/logout")
+      const token = localStorage.getItem("token");
+      await apiRequest.post("/auth/logout", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
+    })
       updateUser(null)
       navigate("/")
     }catch(err){

@@ -18,8 +18,13 @@ function Register() {
     const email = formData.get("email")
     const password = formData.get("password")
     try{
+      const token = localStorage.getItem("token");
     const res = await apiRequest.post("/auth/register",{
       username, email, password,
+    },{
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
     });
     navigate("/login")
   }catch(err){

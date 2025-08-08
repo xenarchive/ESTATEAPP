@@ -19,6 +19,7 @@ function NewPostPage() {
     const inputs = Object.fromEntries(formData);
 
     try {
+      const token = localStorage.getItem("token");
       const res = await apiRequest.post("/posts", {
         postData: {
           title: inputs.title,
@@ -43,7 +44,12 @@ function NewPostPage() {
           bus: parseInt(inputs.bus),
           restaurant: parseInt(inputs.restaurant),
         },
-      });
+      },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send as Bearer token
+      },
+    });
       navigate("/"+res.data.id)
     } catch (err) {
       console.log(err);
