@@ -23,10 +23,11 @@ function Login() {
       username, password
     })
     updateUser(res.data)
+    console.log(JSON.stringify(res.data))
     localStorage.setItem("token", res.data.token);
     navigate("/")
   }catch(err){
-    setError(err.response.data.message)
+    setError(err.response?.data?.message || "Login failed");
   } finally{
     setIsLoading(false)
   }

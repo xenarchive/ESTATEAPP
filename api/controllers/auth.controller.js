@@ -59,16 +59,17 @@ export const login = async (req, res)=>{
 
     const {password:userPassword, ...userInfo} = user
     res
-        .cookie("token", token, {
-            httpOnly: true,
-            //secure:true,
-            maxAge: age,
-        })
-        .status(200)
-        .json(
-            {...userInfo},
-            token
-        )
+  .cookie("token", token, {
+    httpOnly: true,
+    // secure: true, // uncomment this if using HTTPS
+    maxAge: age,
+  })
+  .status(200)
+  .json({
+    ...userInfo,
+    token,
+  });
+
 
     }catch(err){
         console.log(err)
